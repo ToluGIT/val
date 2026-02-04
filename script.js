@@ -132,3 +132,93 @@ function handleYesClick() {
     // Continuously create new hearts
     setInterval(createHeart, 600);
 })();
+
+// ==========================================
+// Enhancement 4: No Button Escape
+// ==========================================
+(function setupNoButtonEscape() {
+    const noButton = document.querySelector('.no-button');
+    if (!noButton) return;
+
+    let escapeEnabled = true;
+    const escapeDistance = 100; // Distance at which button starts running
+    const moveDistance = 150;   // How far button jumps
+
+    // Get safe boundaries for button movement
+    function getSafeBounds() {
+        const padding = 20;
+        return {
+            minX: padding,
+            maxX: window.innerWidth - noButton.offsetWidth - padding,
+            minY: padding,
+            maxY: window.innerHeight - noButton.offsetHeight - padding
+        };
+    }
+
+    // Move button to random position away from cursor
+    function escapeFrom(mouseX, mouseY) {
+        const rect = noButton.getBoundingClientRect();
+        const buttonCenterX = rect.left + rect.width / 2;
+        const buttonCenterY = rect.top + rect.height / 2;
+
+        // Calculate direction away from mouse
+        const angle = Math.atan2(buttonCenterY - mouseY, buttonCenterX - mouseX);
+
+        // Add some randomness to make it playful
+        const randomAngle = angle + (Math.random() - 0.5) * 1.5;
+
+        let newX = buttonCenterX + Math.cos(randomAngle) * moveDistance - rect.width / 2;
+        let newY = buttonCenterY + Math.sin(randomAngle) * moveDistance - rect.height / 2;
+
+        // Keep within bounds
+        const bounds = getSafeBounds();
+        newX = Math.max(bounds.minX, Math.min(bounds.maxX, newX));
+        newY = Math.max(bounds.minY, Math.min(bounds.maxY, newY));
+
+        // If stuck in corner, jump to opposite side
+        if ((newX <= bounds.minX || newX >= bounds.maxX) &&
+            (newY <= bounds.minY || newY >= bounds.maxY)) {
+            newX = Math.random() * (bounds.maxX - bounds.minX) + bounds.minX;
+            newY = Math.random() * (bounds.maxY - bounds.minY) + bounds.minY;
+        }
+
+        noButton.style.position = 'fixed';
+        noButton.style.left = `${newX}px`;
+        noButton.style.top = `${newY}px`;
+        noButton.style.zIndex = '1000';
+    }
+
+    // Check distance and escape if needed
+    function checkDistance(e) {
+        if (!escapeEnabled) return;
+
+        const rect = noButton.getBoundingClientRect();
+        const buttonCenterX = rect.left + rect.width / 2;
+        const buttonCenterY = rect.top + rect.height / 2;
+
+        const distance = Math.sqrt(
+            Math.pow(e.clientX - buttonCenterX, 2) +
+            Math.pow(e.clientY - buttonCenterY, 2)
+        );
+
+        if (distance < escapeDistance) {
+            escapeFrom(e.clientX, e.clientY);
+        }
+    }
+
+    // Track mouse movement
+    document.addEventListener('mousemove', checkDistance);
+
+    // Also escape on hover (backup)
+    noButton.addEventListener('mouseenter', (e) => {
+        if (escapeEnabled) {
+            escapeFrom(e.clientX, e.clientY);
+        }
+    });
+
+    // Disable escape briefly after click so click can register
+    noButton.addEventListener('mousedown', () => {
+        escapeEnabled = false;
+        setTimeout(() => { escapeEnabled = true; }, 300);
+    });
+})();
