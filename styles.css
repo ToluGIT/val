@@ -4,18 +4,74 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f9e3e3;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Quicksand', sans-serif;
     flex-direction: column;
+    overflow: hidden;
+    background: linear-gradient(-45deg, #ffccd5, #fff0f3, #ffc2d1, #ffe5ec);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
   }
-  
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Floating Hearts */
+  .hearts-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .heart {
+    position: absolute;
+    bottom: -20px;
+    font-size: var(--heart-size, 24px);
+    color: var(--heart-color, #e91e63);
+    text-shadow: 0 0 10px currentColor;
+    animation: floatUp var(--duration, 6s) ease-out forwards;
+    animation-delay: var(--delay, 0s);
+    will-change: transform, opacity;
+  }
+
+  @keyframes floatUp {
+    0% {
+      opacity: 0;
+      transform: translateY(0) rotate(0deg) scale(0.5);
+    }
+    15% {
+      opacity: 1;
+    }
+    85% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-100vh) rotate(360deg) scale(1.2);
+    }
+  }
+
   .container {
     text-align: center;
+    position: relative;
+    z-index: 1;
   }
-  
+
   h1 {
-    font-size: 2.5em;
-    color: #d32f2f;
+    font-family: 'Playfair Display', serif;
+    font-size: 3em;
+    font-weight: 600;
+    font-style: italic;
+    color: #c41e3a;
+    letter-spacing: 0.02em;
+    text-shadow: 2px 2px 4px rgba(196, 30, 58, 0.15);
   }
   
   .buttons {
@@ -23,24 +79,69 @@ body {
   }
   
   .yes-button {
+    font-family: 'Quicksand', sans-serif;
     font-size: 1.5em;
-    padding: 10px 20px;
-    margin-right: 10px;
-    background-color: #4caf50;
+    font-weight: 600;
+    padding: 12px 28px;
+    margin-right: 15px;
+    background-color: #e91e63;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 50px;
     cursor: pointer;
+    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+    transition: all 0.3s ease;
+    animation: heartbeat 1.5s ease-in-out infinite;
+    position: relative;
   }
-  
+
+  /* Heartbeat pulse animation */
+  @keyframes heartbeat {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+    }
+    14% {
+      transform: scale(1.08);
+      box-shadow: 0 6px 25px rgba(233, 30, 99, 0.6);
+    }
+    28% {
+      transform: scale(1);
+      box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+    }
+    42% {
+      transform: scale(1.05);
+      box-shadow: 0 5px 20px rgba(233, 30, 99, 0.5);
+    }
+    70% {
+      transform: scale(1);
+      box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+    }
+  }
+
+  .yes-button:hover {
+    background-color: #d81b60;
+    transform: scale(1.1);
+    box-shadow: 0 8px 30px rgba(233, 30, 99, 0.6);
+    animation: none;
+  }
+
   .no-button {
+    font-family: 'Quicksand', sans-serif;
     font-size: 1.5em;
-    padding: 10px 20px;
-    background-color: #f44336;
+    font-weight: 500;
+    padding: 12px 28px;
+    background-color: #78909c;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 50px;
     cursor: pointer;
+    box-shadow: 0 4px 15px rgba(120, 144, 156, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .no-button:hover {
+    background-color: #607d8b;
   }
   
   .gif_container img {

@@ -4,17 +4,73 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f9e3e3;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Quicksand', sans-serif;
+    overflow: hidden;
+    background: linear-gradient(-45deg, #ffccd5, #fff0f3, #ffc2d1, #ffe5ec);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Floating Hearts */
+.hearts-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.heart {
+    position: absolute;
+    bottom: -20px;
+    font-size: var(--heart-size, 24px);
+    color: var(--heart-color, #e91e63);
+    text-shadow: 0 0 10px currentColor;
+    animation: floatUp var(--duration, 6s) ease-out forwards;
+    animation-delay: var(--delay, 0s);
+    will-change: transform, opacity;
+}
+
+@keyframes floatUp {
+    0% {
+        opacity: 0;
+        transform: translateY(0) rotate(0deg) scale(0.5);
+    }
+    15% {
+        opacity: 1;
+    }
+    85% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-100vh) rotate(360deg) scale(1.2);
+    }
 }
 
 .container {
     text-align: center;
+    position: relative;
+    z-index: 1;
 }
 
 .header_text {
-    font-size: 3em;
-    color: #d32f2f;
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5em;
+    font-weight: 600;
+    font-style: italic;
+    color: #c41e3a;
+    letter-spacing: 0.02em;
+    text-shadow: 2px 2px 4px rgba(196, 30, 58, 0.15);
 }
 
 .gif_container img {
