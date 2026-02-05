@@ -78,7 +78,64 @@ function handleNoClick() {
 }
 
 function handleYesClick() {
-    window.location.href = "yes_page.html";
+    // Trigger confetti explosion before redirect
+    createConfettiExplosion();
+
+    // Delay redirect to show confetti
+    setTimeout(() => {
+        window.location.href = "yes_page.html";
+    }, 1500);
+}
+
+// ==========================================
+// Enhancement 5: Confetti Explosion
+// ==========================================
+function createConfettiExplosion() {
+    const container = document.body;
+    const colors = ['#e91e63', '#f44336', '#ff5252', '#ff8a80', '#f8bbd9', '#ffcdd2', '#fce4ec'];
+    const shapes = ['♥', '❤', '💕', '✨', '💖', '💗'];
+    const particleCount = 80;
+
+    for (let i = 0; i < particleCount; i++) {
+        setTimeout(() => {
+            const particle = document.createElement('div');
+            particle.className = 'confetti-particle';
+            particle.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+
+            // Random properties
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const size = Math.random() * 20 + 14;
+            const startX = window.innerWidth / 2;
+            const startY = window.innerHeight / 2;
+
+            // Explosion direction
+            const angle = (Math.random() * 360) * (Math.PI / 180);
+            const velocity = Math.random() * 400 + 200;
+            const endX = startX + Math.cos(angle) * velocity;
+            const endY = startY + Math.sin(angle) * velocity;
+
+            // Styling
+            particle.style.cssText = `
+                position: fixed;
+                left: ${startX}px;
+                top: ${startY}px;
+                font-size: ${size}px;
+                color: ${color};
+                pointer-events: none;
+                z-index: 9999;
+                text-shadow: 0 0 10px ${color};
+                animation: confettiExplode 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+                --end-x: ${endX - startX}px;
+                --end-y: ${endY - startY}px;
+                --rotation: ${Math.random() * 720 - 360}deg;
+            `;
+
+            container.appendChild(particle);
+
+            // Cleanup
+            setTimeout(() => particle.remove(), 1600);
+        }, i * 15);
+    }
 }
 
 // ==========================================
@@ -134,15 +191,17 @@ function handleYesClick() {
 })();
 
 // ==========================================
-// Enhancement 4: No Button Escape
+// Enhancement 4: No Button Escape (60% chance)
 // ==========================================
 (function setupNoButtonEscape() {
     const noButton = document.querySelector('.no-button');
     if (!noButton) return;
 
     let escapeEnabled = true;
-    const escapeDistance = 100; // Distance at which button starts running
-    const moveDistance = 150;   // How far button jumps
+    let lastEscapeTime = 0;
+    const escapeChance = 0.6;      // 60% chance to escape (3 out of 5)
+    const escapeCooldown = 400;    // Minimum time between escape checks
+    const moveDistance = 150;      // How far button jumps
 
     // Get safe boundaries for button movement
     function getSafeBounds() {
@@ -188,37 +247,30 @@ function handleYesClick() {
         noButton.style.zIndex = '1000';
     }
 
-    // Check distance and escape if needed
-    function checkDistance(e) {
-        if (!escapeEnabled) return;
+    // Try to escape with 60% probability
+    function tryEscape(mouseX, mouseY) {
+        const now = Date.now();
 
-        const rect = noButton.getBoundingClientRect();
-        const buttonCenterX = rect.left + rect.width / 2;
-        const buttonCenterY = rect.top + rect.height / 2;
+        // Cooldown to prevent rapid-fire escapes
+        if (now - lastEscapeTime < escapeCooldown) return;
 
-        const distance = Math.sqrt(
-            Math.pow(e.clientX - buttonCenterX, 2) +
-            Math.pow(e.clientY - buttonCenterY, 2)
-        );
-
-        if (distance < escapeDistance) {
-            escapeFrom(e.clientX, e.clientY);
+        // 60% chance to escape
+        if (Math.random() < escapeChance) {
+            escapeFrom(mouseX, mouseY);
+            lastEscapeTime = now;
         }
     }
 
-    // Track mouse movement
-    document.addEventListener('mousemove', checkDistance);
-
-    // Also escape on hover (backup)
+    // Escape on hover (with probability)
     noButton.addEventListener('mouseenter', (e) => {
         if (escapeEnabled) {
-            escapeFrom(e.clientX, e.clientY);
+            tryEscape(e.clientX, e.clientY);
         }
     });
 
     // Disable escape briefly after click so click can register
     noButton.addEventListener('mousedown', () => {
         escapeEnabled = false;
-        setTimeout(() => { escapeEnabled = true; }, 300);
+        setTimeout(() => { escapeEnabled = true; }, 500);
     });
 })();

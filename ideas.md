@@ -20,3 +20,11 @@ Memory Lane - Slideshow of photos before the question appears
 Fireworks/Confetti - Celebration animation on yes_page
 Love Letter Reveal - Animated letter unfolding with a personal message
 Future Plans - "Here's what I have planned for us..." reveal
+
+pkill -f "python3 -m http.server"
+
+lsof -i :8099 2>/dev/null
+
+kill -9 11464
+
+python3 -m http.server 8099
