@@ -1,0 +1,15 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Backup folder
+backup/
+
+# Claude Code
+.claude/
+
+# Frontend design skill folder
+frontend-design/
+
+# Ideas/notes
+ideas.md

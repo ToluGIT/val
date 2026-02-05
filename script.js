@@ -53,17 +53,24 @@
     }
 })();
 */
+// Get stored name or default
+const valentineName = localStorage.getItem('valentineName') || 'my love';
+
 const messages = [
-    "Are you sure?",
-    "Really sure??",
-    "Are you positive?",
-    "Pookie please...",
-    "Just think about it!",
-    "If you say no, I will be really sad...",
-    "I will be very sad...",
-    "I will be very very very sad...",
-    "Ok fine, I will stop asking...",
-    "Just kidding, say yes please! ❤️"
+    "Are you sure, my love? 🥺",
+    "But... you're my comfort 💔",
+    "I'll give you all my cuddles...",
+    "Think of all our hugs! 🤗",
+    "I promise to make you smile every day...",
+    "My heart is literally breaking rn 😢",
+    "I'll be the best valentine EVER! 💕",
+    "Pretty please with cherries on top? 🍒",
+    "You're my favorite person...",
+    `Okay fine Fort... but I'll never stop loving you 💗`,
+    "WAIT! I have more reasons!",
+    "I'll watch whatever you want to watch...",
+    `Please ${valentineName}! I need you! 😭`,
+    "Just kidding, SAY YES ALREADY! ❤️"
 ];
 
 let messageIndex = 0;

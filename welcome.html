@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Someone Special...</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="welcome_style.css">
+</head>
+<body>
+    <!-- Floating Hearts Background -->
+    <div class="hearts-container" id="hearts"></div>
+
+    <div class="container">
+        <h1 class="title">This is for someone special...</h1>
+        <p class="subtitle">Enter her name to continue</p>
+
+        <div class="input-container">
+            <input
+                type="text"
+                id="nameInput"
+                class="name-input"
+                placeholder="Her name..."
+                autocomplete="off"
+                autofocus
+            >
+            <button class="unlock-btn" onclick="checkName()">
+                <span class="btn-text">Unlock</span>
+                <span class="btn-heart">♥</span>
+            </button>
+        </div>
+
+        <p id="errorMsg" class="error-msg"></p>
+
+        <div class="hint">
+            <span class="hint-icon">💝</span>
+            <span class="hint-text">Hint: She brings me comfort...</span>
+        </div>
+    </div>
+
+    <script>
+    // Accepted names (case-insensitive)
+    const validNames = ['comfort', 'fort'];
+
+    function checkName() {
+        const input = document.getElementById('nameInput');
+        const errorMsg = document.getElementById('errorMsg');
+        const name = input.value.trim().toLowerCase();
+
+        if (validNames.includes(name)) {
+            // Store the name for personalization
+            localStorage.setItem('valentineName', input.value.trim());
+
+            // Success animation
+            document.body.classList.add('success');
+            errorMsg.textContent = '';
+
+            // Redirect after brief delay
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 800);
+        } else if (name === '') {
+            errorMsg.textContent = "Type her name, silly! 💕";
+            input.classList.add('shake');
+            setTimeout(() => input.classList.remove('shake'), 500);
+        } else {
+            errorMsg.textContent = "Hmm, that's not who I had in mind... 🤔";
+            input.classList.add('shake');
+            setTimeout(() => input.classList.remove('shake'), 500);
+        }
+    }
+
+    // Allow Enter key to submit
+    document.getElementById('nameInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') checkName();
+    });
+
+    // Floating Hearts
+    (function createFloatingHearts() {
+        const heartsContainer = document.getElementById('hearts');
+        if (!heartsContainer) return;
+
+        const colors = ['#e91e63', '#f44336', '#ff5252', '#ff8a80', '#f8bbd9'];
+        const hearts = ['♥', '❤', '💕', '♡'];
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+
+            const size = Math.random() * 18 + 16;
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const left = Math.random() * 100;
+            const duration = Math.random() * 3 + 5;
+            const delay = Math.random() * 0.5;
+
+            heart.style.setProperty('--heart-size', `${size}px`);
+            heart.style.setProperty('--heart-color', color);
+            heart.style.setProperty('--duration', `${duration}s`);
+            heart.style.setProperty('--delay', `${delay}s`);
+            heart.style.left = `${left}%`;
+
+            heartsContainer.appendChild(heart);
+            setTimeout(() => heart.remove(), (duration + delay + 0.5) * 1000);
+        }
+
+        for (let i = 0; i < 10; i++) {
+            setTimeout(() => createHeart(), i * 200);
+        }
+        setInterval(createHeart, 600);
+    })();
+    </script>
+</body>
+</html>
