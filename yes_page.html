@@ -3,58 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Knew you would say yes!</title>
-    <!-- Romantic Typography: Playfair Display + Quicksand -->
+    <title>Rukky said yes!</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./yes_style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="yes_style.css">
 </head>
 <body>
-    <!-- Floating Hearts Background -->
-    <div class="hearts-container" id="hearts"></div>
+    <audio id="whatIsLove" preload="auto" loop>
+        <source src="sounds/8-Bit-Waht Is Love.mp3" type="audio/mpeg">
+    </audio>
 
-    <div class="container">
-        <h1 class="header_text">I knew you'd say yes!</h1>
-        <div class="gif_container">
-            <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmo3c3l5ODh3ZGN6NHhhaDE2Mjg1ZjkwOXczdDFxbWM3dTBtaW9zaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/9XY4f3FgFTT4QlaYqa/giphy.gif">
+    <div class="particles" id="particles"></div>
+    <div class="grain"></div>
+
+    <div class="celebration">
+        <span class="sparkle">✦</span>
+        <h1 class="title">I knew you'd say yes, Rukky.</h1>
+        <p class="subtitle">This is going to be good.</p>
+        <div class="gif-wrap">
+            <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmo3c3l5ODh3ZGN6NHhhaDE2Mjg1ZjkwOXczdDFxbWM3dTBtaW9zaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/9XY4f3FgFTT4QlaYqa/giphy.gif" alt="Happy Valentine's Day">
         </div>
     </div>
 
     <script>
-    // Floating Hearts Generator
-    (function createFloatingHearts() {
-        const heartsContainer = document.getElementById('hearts');
-        if (!heartsContainer) return;
-
-        const colors = ['#e91e63', '#f44336', '#ff5252', '#ff8a80', '#f8bbd9'];
-        const hearts = ['♥', '❤', '💕', '♡'];
-
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
-
-            const size = Math.random() * 18 + 16;
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            const left = Math.random() * 100;
-            const duration = Math.random() * 3 + 5;
-            const delay = Math.random() * 0.5;
-
-            heart.style.setProperty('--heart-size', `${size}px`);
-            heart.style.setProperty('--heart-color', color);
-            heart.style.setProperty('--duration', `${duration}s`);
-            heart.style.setProperty('--delay', `${delay}s`);
-            heart.style.left = `${left}%`;
-
-            heartsContainer.appendChild(heart);
-            setTimeout(() => heart.remove(), (duration + delay + 0.5) * 1000);
+    // Play celebration music
+    (function() {
+        const music = document.getElementById('whatIsLove');
+        if (music) {
+            music.volume = 0.4;
+            music.play().catch(() => {
+                // Autoplay blocked — play on first interaction
+                document.addEventListener('click', () => {
+                    music.play().catch(() => {});
+                }, { once: true });
+            });
         }
+    })();
 
-        for (let i = 0; i < 10; i++) {
-            setTimeout(() => createHeart(), i * 200);
+    // Ambient particles
+    (function() {
+        const container = document.getElementById('particles');
+        if (!container) return;
+        const colors = ['#ff4fd8', '#4df0ff', '#ffd700', '#ff8af0', '#39ff14'];
+        for (let i = 0; i < 18; i++) {
+            const p = document.createElement('div');
+            p.classList.add('particle');
+            const size = Math.random() * 6 + 3;
+            p.style.width = `${size}px`;
+            p.style.height = `${size}px`;
+            p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            p.style.left = `${Math.random() * 100}%`;
+            p.style.setProperty('--dur', `${Math.random() * 8 + 8}s`);
+            p.style.setProperty('--delay', `${Math.random() * 10}s`);
+            p.style.setProperty('--sway', `${(Math.random() - 0.5) * 80}px`);
+            p.style.setProperty('--opacity', Math.random() * 0.2 + 0.1);
+            container.appendChild(p);
         }
-        setInterval(createHeart, 600);
     })();
     </script>
 </body>

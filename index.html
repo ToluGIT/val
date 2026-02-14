@@ -1,30 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Will You Be My Valentine?</title>
-    <!-- Romantic Typography: Playfair Display + Quicksand -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>💕</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Floating Hearts Background -->
-    <div class="hearts-container" id="hearts"></div>
 
-    <div class="container">
-        <h1>Will you be my Valentine?</h1>
-        <div class="buttons">
-            <button class="yes-button" onclick="handleYesClick()">Yes</button>
-            <button class="no-button" onclick="handleNoClick()">No</button>
-        </div>
-        <div class="gif_container">
-            <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbW5lenZyZHI5OXM2eW95b3pmMG40cWVrMDhtNjVuM3A4dGNxa2g2dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/VM1fcpu2bKs1e2Kdbj/giphy.gif" alt="Cute GIF">
-        </div>
+<!-- Audio -->
+<audio id="checkSound" preload="auto"><source src="sounds/check.mp3" type="audio/mpeg"></audio>
+<audio id="neonOnSound" preload="auto"><source src="sounds/neon-on.mp3" type="audio/mpeg"></audio>
+<audio id="whatIsLove" preload="auto" loop><source src="sounds/8-Bit-Waht Is Love.mp3" type="audio/mpeg"></audio>
+<audio id="mazeFone" preload="auto" loop><source src="sounds/maze_fone.mp3" type="audio/mpeg"></audio>
+<audio id="mazeCatch" preload="auto"><source src="sounds/maze_catch.mp3" type="audio/mpeg"></audio>
+<audio id="mazeFinal" preload="auto"><source src="sounds/maze_final.mp3" type="audio/mpeg"></audio>
+
+<!-- ===== SCREEN 1: LOADING ===== -->
+<div class="screen active" id="screen1">
+  <div class="card">
+    <h2>Initialising feelings...</h2>
+    <p class="sub">Connecting to Rukky's 💕 server</p>
+    <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+    <p class="load-text" id="loadText">0%</p>
+    <p class="error-text" id="errorText">Excess feelings detected<br>Retrying...</p>
+    <button id="continueBtn" disabled>Continue</button>
+  </div>
+</div>
+
+<!-- ===== SCREEN 2: CHECKLIST ===== -->
+<div class="screen" id="screen2">
+  <div class="card">
+    <h2>Running a quick scan on you 🧠💓</h2>
+    <ul id="checklist">
+      <li><span class="check-glow"><span class="check"></span></span><span>Smart</span></li>
+      <li><span class="check-glow"><span class="check"></span></span><span>Beautiful</span></li>
+      <li><span class="check-glow"><span class="check"></span></span><span>Makes me laugh</span></li>
+      <li><span class="check-glow"><span class="check"></span></span><span>Worth the argument</span></li>
+      <li><span class="check-glow"><span class="check"></span></span><span>Still on my mind</span></li>
+    </ul>
+    <p id="compatibility">
+      <span class="compat-main">100% compatible</span><br>
+      <span class="compat-sub">(yeah, I'm surprised too 😏)</span>
+    </p>
+    <button id="nextBtn2" onclick="goScreen(3)" disabled>What's next?</button>
+  </div>
+</div>
+
+<!-- ===== SCREEN 3: THE MESSAGE ===== -->
+<div class="screen" id="screen3">
+  <div class="card">
+    <div class="attention">Hey Rukky...</div>
+    <div class="problem">I keep thinking about you</div>
+    <div class="think-text">
+      I know things got messy for a bit.<br>
+      But honestly? I wouldn't want to be<br>
+      figuring this out with <span class="about-you">anyone else</span>
+    </div>
+    <p class="message-sub">And I'm not planning to stop 😌</p>
+    <button onclick="startMazeGame()">Prove your feelings 🌀</button>
+  </div>
+</div>
+
+<!-- ===== SCREEN 4: MAZE GAME ===== -->
+<div class="screen" id="screen4">
+  <div class="card maze-card">
+    <h2>Maze of feelings 🌀</h2>
+    <p class="sub">Guide the heart through the maze — collect love along the way</p>
+
+    <div class="maze-stats">
+      <div class="maze-stat">
+        <div class="maze-stat-value" id="steps">0</div>
+        <div class="maze-stat-label">Steps</div>
+      </div>
+      <div class="maze-stat">
+        <div class="maze-stat-value" id="collected">0/5</div>
+        <div class="maze-stat-label">Collected</div>
+      </div>
+      <div class="maze-stat">
+        <div class="maze-stat-value" id="time">0</div>
+        <div class="maze-stat-label">Seconds</div>
+      </div>
     </div>
 
-    <script src="script.js"></script>
+    <div class="game-container" id="gameContainer">
+      <canvas id="mazeCanvas"></canvas>
+      <div id="gameElements"></div>
+    </div>
+
+    <div class="maze-controls-section">
+      <div id="mazeControlsContainer" class="maze-controls-container">
+        <div class="dpad">
+          <div class="dpad-btn up" onclick="movePlayer(0, -1)">⬆️</div>
+          <div class="dpad-btn left" onclick="movePlayer(-1, 0)">⬅️</div>
+          <div class="dpad-btn center"></div>
+          <div class="dpad-btn right" onclick="movePlayer(1, 0)">➡️</div>
+          <div class="dpad-btn down" onclick="movePlayer(0, 1)">⬇️</div>
+        </div>
+      </div>
+
+      <div class="maze-completion-message" id="mazeCompletionMessage">
+        <h3>You found your way 🏆</h3>
+        <p>Through every wall, you made it to my heart 💖</p>
+      </div>
+    </div>
+
+    <div class="maze-action-buttons">
+      <button id="restartBtn" onclick="restartMazeGame()">Restart 🔄</button>
+      <button id="nextMazeBtn" onclick="goScreen(5)" disabled>Continue ✨</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 5: TIMELINE ===== -->
+<div class="screen" id="screen5">
+  <div class="card">
+    <h2>What's ahead for us ✨</h2>
+    <p class="sub">A few things I'm looking forward to —</p>
+
+    <div class="timeline-cards" id="timelineCards">
+      <div class="tcard">
+        <div class="tcard-accent rose"></div>
+        <div class="tcard-body">
+          <span class="tcard-emoji">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>
+          <span class="tcard-when">Next week</span>
+          <h3>Glasgow Trip</h3>
+          <p>Exploring the city together. New places, good food, and zero plans beyond just being there with you.</p>
+        </div>
+      </div>
+      <div class="tcard">
+        <div class="tcard-accent blue"></div>
+        <div class="tcard-body">
+          <span class="tcard-emoji">🎳</span>
+          <span class="tcard-when">Next week</span>
+          <h3>Bowling Date</h3>
+          <p>Loser buys dinner. And just so you know — I don't plan on losing. But I'll still buy you dinner anyway.</p>
+        </div>
+      </div>
+      <div class="tcard">
+        <div class="tcard-accent gold"></div>
+        <div class="tcard-body">
+          <span class="tcard-emoji">✦</span>
+          <span class="tcard-when">And beyond</span>
+          <h3>To be continued...</h3>
+          <p>This is just the beginning. There's a lot more where this came from — we've got momentum now.</p>
+        </div>
+      </div>
+    </div>
+
+    <button onclick="goScreen(6)">One more thing...</button>
+  </div>
+</div>
+
+<!-- ===== SCREEN 6: THE QUESTION ===== -->
+<div class="screen" id="screen6">
+  <div class="card">
+    <h2>The real question 💘</h2>
+    <p class="valentine-q">Rukky, will you be my Valentine?</p>
+
+    <div class="btn-row">
+      <button class="yes-btn" onclick="goScreen(7)">Yes 💖</button>
+      <button class="yes-btn" onclick="goScreen(7)">Obviously yes 💘</button>
+    </div>
+
+    <div class="no-area" id="noArea">
+      <button class="no-btn" id="noBtn">No 🙈</button>
+    </div>
+  </div>
+
+  <div class="no-messages" id="noMessages"></div>
+</div>
+
+<!-- ===== SCREEN 7: CELEBRATION ===== -->
+<div class="screen" id="screen7">
+  <div class="card">
+    <h1 class="celebration-title">I knew it 💕</h1>
+    <div class="promise-block">
+      <div class="promise-line"><span class="pw">I promise to</span> <span class="hw">show up</span> 🤝</div>
+      <div class="promise-line"><span class="kw">make you laugh</span> 😂</div>
+      <div class="promise-line"><span class="fw">and never let it get messy again</span> 💪</div>
+    </div>
+    <button id="hugBtn">Send a hug 🤗</button>
+    <div class="footer">Made with thoughts of you, Rukky 💕</div>
+  </div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
